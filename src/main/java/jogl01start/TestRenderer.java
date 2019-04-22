@@ -43,16 +43,16 @@ public class TestRenderer implements GLEventListener, MouseListener,
 		GL2 gl = glDrawable.getGL().getGL2();
 		
 		// nulujeme misto pro kresleni
-		gl.glClearColor(0f, 0f, 0f, 1f);
-		gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
+//		gl.glClearColor(0f, 0f, 0f, 1f);
+//		gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
 
 		// nastaveni modelovaci transformace
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
-		gl.glLoadIdentity(); // inicializace na jednotkovou matici
+//		gl.glMatrixMode(GL2.GL_MODELVIEW);
+//		gl.glLoadIdentity(); // inicializace na jednotkovou matici
 
 		// nastaveni projekce
-		gl.glMatrixMode(GL2.GL_PROJECTION);
-		gl.glLoadIdentity(); // inicializace na jednotkovou matici
+//		gl.glMatrixMode(GL2.GL_PROJECTION);
+//		gl.glLoadIdentity(); // inicializace na jednotkovou matici
 
 		gl.glBegin(GL2.GL_TRIANGLES); // vykreslime trojuhelnik
 		gl.glColor3f(1.0f, 0.0f, 0.0f); // barva prvniho vrcholu CERVENA

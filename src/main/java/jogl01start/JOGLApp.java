@@ -32,12 +32,19 @@ public class JOGLApp {
 
 	    	// The canvas is the widget that's drawn in the JFrame
 	    	GLCanvas canvas = new GLCanvas(capabilities);
-	    	TestRenderer ren = new TestRenderer();
+	    	
+	    	
+//	    	TestRenderer ren = new TestRenderer();
+//			canvas.addGLEventListener(ren);
+//			canvas.addMouseListener(ren);
+//			canvas.addMouseMotionListener(ren);
+//			canvas.addKeyListener(ren);
+	    	
+	    	FooRenderer ren = new FooRenderer();
 			canvas.addGLEventListener(ren);
-			canvas.addMouseListener(ren);
-			canvas.addMouseMotionListener(ren);
-			canvas.addKeyListener(ren);
-	    	canvas.setSize( 512, 384 );
+			
+			
+			canvas.setSize( 512, 384 );
 	    	
 	    	
 	    	testFrame.add(canvas);
