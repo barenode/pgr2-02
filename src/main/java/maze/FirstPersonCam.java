@@ -7,6 +7,7 @@ import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,7 +19,7 @@ import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.gl2.GLUT;
 
-public class FirstPersonCam  implements KeyListener, MouseMotionListener, GLEventListener
+public class FirstPersonCam  implements KeyListener, MouseMotionListener, GLEventListener, MouseListener
 {
 
     private static final int forward = KeyEvent.VK_W;
@@ -29,7 +30,7 @@ public class FirstPersonCam  implements KeyListener, MouseMotionListener, GLEven
     private static final int shift = KeyEvent.VK_SHIFT;
 
     private static final int mouseSpeed = 1;
-    private static final int keySpeed = 3;
+    private static final int keySpeed = 1;
     private static final int rotVMax = 1;
     private static final int rotVMin = -1;
     private final Map<Integer, Boolean> keys = new ConcurrentHashMap<Integer, Boolean>();
@@ -37,7 +38,9 @@ public class FirstPersonCam  implements KeyListener, MouseMotionListener, GLEven
     private final GLCanvas canvas;
     private final Robot robot;
     private float rotX, rotY, rotZ, rotV;
-    private float posX, posY, posZ;
+    private float posX;
+    private float posY; 
+    private float posZ = -5;
     private int centerX, centerY;
     private long lastTime = -1;
     
@@ -69,6 +72,7 @@ public class FirstPersonCam  implements KeyListener, MouseMotionListener, GLEven
 
         canvas.addKeyListener(this);
         canvas.addMouseMotionListener(this);
+        canvas.addMouseListener(this);
         canvas.addGLEventListener(this);
 
     }
@@ -96,35 +100,43 @@ public class FirstPersonCam  implements KeyListener, MouseMotionListener, GLEven
 
         final double speed = keySpeed * -((lastTime - (lastTime = System.nanoTime())) / 10E7) * mul;
 
-
+        float newPosX = posX;
+        float newPosZ = posZ;
+        
         if ((value = keys.get(forward)) != null && value == true) {
 
-            posX -= Math.sin(rotY) * speed;
-            posZ += Math.cos(rotY) * speed;
-            posY += rotV * speed;
+        	newPosX -= Math.sin(rotY) * speed;
+        	newPosZ += Math.cos(rotY) * speed;
+            //posY += rotV * speed;
         }
 
         if ((value = keys.get(backward)) != null && value == true) {
 
-            posX += Math.sin(rotY) * speed;
-            posZ -= Math.cos(rotY) * speed;
-            posY -= rotV * speed;
+        	newPosX += Math.sin(rotY) * speed;
+        	newPosZ -= Math.cos(rotY) * speed;
+            //posY -= rotV * speed;
         }
 
         if ((value = keys.get(leftward)) != null && value == true) {
 
-            posX += Math.cos(rotY) * speed;
-            posZ += Math.sin(rotY) * speed;
+        	newPosX += Math.cos(rotY) * speed;
+        	newPosZ += Math.sin(rotY) * speed;
 
         }
 
         if ((value = keys.get(rightward)) != null && value == true) {
 
-            posX -= Math.cos(rotY) * speed;
-            posZ -= Math.sin(rotY) * speed;
+        	newPosX -= Math.cos(rotY) * speed;
+        	newPosZ -= Math.sin(rotY) * speed;
 
         }
 
+        
+        Vec2D dest = Utils.collide(posX, posZ, newPosX, newPosZ);
+        
+        
+        posX = dest.x;
+        posZ = dest.y;
     }
 
     private void calculateModelview()
@@ -155,7 +167,9 @@ public class FirstPersonCam  implements KeyListener, MouseMotionListener, GLEven
     }
     
     public void setPosition(float x, float y, float z){
-        posX = x;
+        
+    	
+    	posX = x;
         posY = y;
         posZ = z;
     }
@@ -173,25 +187,26 @@ public class FirstPersonCam  implements KeyListener, MouseMotionListener, GLEven
 		gl.glMatrixMode(GL2.GL_MODELVIEW);		
 		gl.glPushMatrix();
 		glut.glutSolidCube(1);		
-		//gl.glScalef(10, 10, 100);
+		gl.glScalef(10, 10, 100);
+		
 		//glut.glutSolidCube(1);				
 		gl.glPopMatrix();		
 		gl.glEndList();	
 		
 		gl.glNewList(2, GL2.GL_COMPILE);
-		for (int x=-5; x<=5; x++) {
-			//int x = 0;
-			//int z = 0;
-			//int y = 0;
-			for (int y=-5; y<=5; y++) {
-				for (int z=-5; z<=5; z++) {
+//		for (int x=-5; x<=5; x++) {
+			int x = 0;
+			int z = 0;
+			int y = 0;
+//			for (int y=-5; y<=5; y++) {
+//				for (int z=-5; z<=5; z++) {
 					gl.glPushMatrix();
-					gl.glTranslatef(x*1, y*1, z*1);
+					//gl.glTranslatef(0, 0, -20);
 					gl.glCallList(1);
 					gl.glPopMatrix();
-				}
-			}
-		}
+//				}
+//			}
+//		}
 		gl.glEndList();	
     	
     }
@@ -216,9 +231,9 @@ public class FirstPersonCam  implements KeyListener, MouseMotionListener, GLEven
     @Override
     public void mouseMoved(final MouseEvent e)
     {
-    	System.out.println("mouseMoved");
         Boolean value = null;
-        if ((value = keys.get(space)) != null && value == true) {
+        //if ((value = keys.get(space)) != null && value == true) {
+        if (pressed) {
             rotY -= (centerX - e.getXOnScreen()) / 1000.0 * mouseSpeed;
             rotV -= (centerY - e.getYOnScreen()) / 1000.0 * mouseSpeed;
 
@@ -267,6 +282,7 @@ public class FirstPersonCam  implements KeyListener, MouseMotionListener, GLEven
 
     @Override public void display(final GLAutoDrawable drawable)
     {
+    	System.out.println("pos(" + posX + ", " + posY + ", " + posZ + ")");
     	
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glEnable(GL2.GL_DEPTH_TEST);
@@ -287,10 +303,42 @@ public class FirstPersonCam  implements KeyListener, MouseMotionListener, GLEven
 		gl.glMultMatrixf(getViewMatrix(), 0);
 		
 		gl.glCallList(2);
+		
+		
+		
     	
     }
 
     public void dispose(GLAutoDrawable drawable)
     {
     }
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private boolean pressed = false;
+	@Override
+	public void mousePressed(MouseEvent e) {
+		pressed = true;		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		pressed = false;		
+	}
 }
