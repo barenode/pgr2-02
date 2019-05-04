@@ -1,4 +1,4 @@
-package maze.math;
+package maze;
 
 public class Segment {
 

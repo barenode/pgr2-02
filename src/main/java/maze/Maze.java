@@ -1,65 +1,66 @@
 package maze;
 
-import java.awt.Frame;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import javax.swing.SwingUtilities;
-
-import com.jogamp.opengl.GLCapabilities;
-import com.jogamp.opengl.GLProfile;
-import com.jogamp.opengl.awt.GLCanvas;
-import com.jogamp.opengl.util.FPSAnimator;
+import com.jogamp.opengl.GL2;
 
 public class Maze {
-
-	public void init() {
-		GLProfile profile = GLProfile.get(GLProfile.GL2);
-    	GLCapabilities capabilities = new GLCapabilities(profile);
-    	GLCanvas canvas = new GLCanvas(capabilities);    	
-    	canvas.setSize(1024, 768);
-    	
-    	//SolidRenderer renderer = new SolidRenderer();//new jogl06pushpopclip.TestRenderer();
-    	
-//    	MazeRenderer renderer = new MazeRenderer();
-//		canvas.addGLEventListener(renderer);
-//		canvas.addMouseListener(renderer);
-//		canvas.addMouseMotionListener(renderer);
-//		canvas.addKeyListener(renderer);
-		
-		
-		Renderer cam = new Renderer(canvas);
-//		canvas.addGLEventListener(cam);
-//		canvas.addMouseMotionListener(cam);
-//		canvas.addKeyListener(cam);
-		
-		
-		Frame frame = new Frame("Maze");
-		frame.setSize(1024, 768);
-		frame.add(canvas);
-		
-		FPSAnimator animator = new FPSAnimator(canvas, 60, true);
-		frame.addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				new Thread() {
-					@Override
-					public void run() {
-						if (animator.isStarted()) {
-							animator.stop();
-						}
-						System.exit(0);
-					}
-				}.start();
+	
+	private TextureLibrary textureLibrary = new TextureLibrary();
+	private List<Wall> walls = new ArrayList<>(); 
+	
+	public void init(GL2 gl) {
+		textureLibrary.init(gl);
+		gl.glNewList(2, GL2.GL_COMPILE);
+		char[][] cfg = read();
+		for (int i=0; i<cfg.length; i++) {
+			char[] row = cfg[i];
+			for (int j=0; j<cfg.length; j++) {
+				char col = row[j];
+				if ('W'==col) {
+					Wall wall = new Wall(i, j, textureLibrary.getTexture());
+					walls.add(wall);
+					wall.init(gl);
+				}
 			}
-		});		
-		
-		frame.pack();
-		frame.setVisible(true);
-        animator.start();	
+		}
+		gl.glEndList();
 	}
 	
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(() -> new Maze().init());
+	public void display(GL2 gl) {
+		gl.glCallList(2);
+	}
+	
+	public Vec2D collide(float posX, float posY, float newPosX, float newPosY) {		
+		return Intersect.collide(posX, posY, newPosX, newPosY, getSegments(posX, posY));
+	}
+	
+	public List<Segment> getSegments(float posX, float posZ) {
+		return walls.stream().map(w->w.getSegments()).flatMap(s->s.stream()).collect(Collectors.toList());
+	}	
+	
+	private char[][] read() {
+		try {
+			char[][] maze = new char[20][20];
+			int row = 0;	
+			InputStream in = Maze.class.getResourceAsStream("/maze.cfg");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in));		
+			while(reader.ready()) {
+			     String line = reader.readLine();
+			     System.out.println(row + " : " + line + "");
+			     for (int col=0; col<20; col++) {
+			    	 maze[row][col] = line.charAt(col);
+			     }
+			     row++;
+			}			
+			return maze;
+		} catch (Exception e) {
+			throw new IllegalStateException(e);
+		}
 	}
 }

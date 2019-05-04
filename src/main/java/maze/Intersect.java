@@ -1,4 +1,4 @@
-package maze.math;
+package maze;
 
 import java.util.List;
 
@@ -146,16 +146,17 @@ public class Intersect {
 		System.out.println("posX: " + posX + ", posY: " + posY + "newPosX: " + newPosX + ", newPosY: " + newPosY + ", dest: " + dest);
 		
 		float finalX, finalY;
+		float offset = .0001f;
 		if (changed) {
 			if (dest.x < posX) {
-				finalX = dest.x + .0001f;
+				finalX = dest.x + offset;
 			} else {
-				finalX = dest.x - .0001f;
+				finalX = dest.x - offset;
 			}
 			if (dest.y < posY) {
-				finalY = dest.y + .0001f;
+				finalY = dest.y + offset;
 			} else {
-				finalY = dest.y - .0001f;
+				finalY = dest.y - offset;
 			}
 			return new Vec2D(finalX, finalY);
 		} else {

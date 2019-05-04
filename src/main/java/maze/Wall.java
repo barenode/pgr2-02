@@ -1,13 +1,12 @@
-package maze.cfg;
+package maze;
 
 import java.util.Arrays;
 import java.util.List;
 
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2GL3;
-
-import maze.math.Segment;
-import maze.math.Vec2D;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureIO;
 
 public class Wall {
 	
@@ -46,35 +45,47 @@ public class Wall {
 	private final int coordZ;
 	private final List<Segment> segments;
 	
-	public Wall(int coordX, int coordZ) {
+	private int texture;
+	
+	public Wall(int coordX, int coordZ, int texture) {
 		super();
 		this.coordX = coordX;
 		this.coordZ = coordZ;
+		this.texture = texture;
 		this.segments = Arrays.asList(
 			new Segment(
-				new Vec2D((float)(-coordX), (float)(-coordZ)),
-				new Vec2D((float)(-coordX-1), (float)(-coordZ))
+				new Vec2D((float)(-coordX)+.1f, (float)(-coordZ)+.1f),
+				new Vec2D((float)(-coordX-1)-1.f, (float)(-coordZ)+.1f)
 			),
 			new Segment(
-				new Vec2D((float)(-coordX), (float)(-coordZ)),
-				new Vec2D((float)(-coordX), (float)(-coordZ-1))
+				new Vec2D((float)(-coordX)+.1f, (float)(-coordZ)+.1f),
+				new Vec2D((float)(-coordX)+.1f, (float)(-coordZ-1)-1.f)
 			),
 			new Segment(
-				new Vec2D((float)(-coordX-1), (float)(-coordZ)),
-				new Vec2D((float)(-coordX-1), (float)(-coordZ-1))
+				new Vec2D((float)(-coordX-1)-1.f, (float)(-coordZ)+.1f),
+				new Vec2D((float)(-coordX-1)-1.f, (float)(-coordZ-1)-1.f)
 			),
 			new Segment(
-				new Vec2D((float)(-coordX), (float)(-coordZ-1)),
-				new Vec2D((float)(-coordX-1), (float)(-coordZ-1))
+				new Vec2D((float)(-coordX)+.1f, (float)(-coordZ-1)-1.f),
+				new Vec2D((float)(-coordX-1)-1.f, (float)(-coordZ-1)-1.f)
 			)
 		);
 	}
 	
 	public void init(GL2 gl) {
 		gl.glPushMatrix();
+		gl.glBindTexture(GL2.GL_TEXTURE_2D, texture);
 		gl.glTranslatef((float)coordX, 0, (float)coordZ);
 		drawBox(gl, 1, GL2GL3.GL_QUADS);
 		gl.glPopMatrix();
+//		try {
+//			//texture
+//			Texture t = TextureIO.newTexture(
+//				Maze.class.getResourceAsStream("/texture/pk02_wall01_C.tga"), true, TextureIO.TGA);
+//			texture = t.getTextureObject(gl);
+//		} catch (Exception e) {
+//			throw new IllegalStateException(e);
+//		}
 	}
 	
 	public List<Segment> getSegments() {
@@ -90,13 +101,13 @@ public class Wall {
 			gl.glBegin(type);
 			gl.glNormal3fv(n[i], 0);
 			float[] vt = v[faces[i][0]];
-			gl.glVertex3f(vt[0] * size, vt[1] * size, vt[2] * size);
+			gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3f(vt[0] * size, vt[1] * size, vt[2] * size);
 			vt = v[faces[i][1]];
-			gl.glVertex3f(vt[0] * size, vt[1] * size, vt[2] * size);
+			gl.glTexCoord2f(1.0f, 0.0f); gl.glVertex3f(vt[0] * size, vt[1] * size, vt[2] * size);
 			vt = v[faces[i][2]];
-			gl.glVertex3f(vt[0] * size, vt[1] * size, vt[2] * size);
+			gl.glTexCoord2f(1.0f, 1.0f); gl.glVertex3f(vt[0] * size, vt[1] * size, vt[2] * size);
 			vt = v[faces[i][3]];
-			gl.glVertex3f(vt[0] * size, vt[1] * size, vt[2] * size);
+			gl.glTexCoord2f(0.0f, 1.0f); gl.glVertex3f(vt[0] * size, vt[1] * size, vt[2] * size);
 			gl.glEnd();
 		}
 	}

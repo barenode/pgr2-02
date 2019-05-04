@@ -19,10 +19,6 @@ import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.gl2.GLUT;
 
-import maze.cfg.Config;
-import maze.math.Intersect;
-import maze.math.Vec2D;
-
 public class Renderer  implements KeyListener, MouseMotionListener, GLEventListener, MouseListener
 {
 
@@ -49,36 +45,25 @@ public class Renderer  implements KeyListener, MouseMotionListener, GLEventListe
     private long lastTime = -1;
     
     GLUT glut = new GLUT();
-    GLU glu = new GLU();
-    
-    // a very simple first person shooter style camera
-    public Renderer(final GLCanvas canvas)
-    {
+    GLU glu = new GLU();    
 
-        // we need the robot to get full control over the mouse
-        Robot r = null;
+    public Renderer(final GLCanvas canvas) {
+    	Robot r = null;
         try {
-
             r = new Robot();
-
         } catch (final AWTException e) {
-
-            e.printStackTrace();
-
+            throw new IllegalStateException(e);            
         }
-
         // setup the modelview matrix
         for (int i = 0; i < 4; i++)
             modelview[i * 5] = 1.0f;
 
         this.canvas = canvas;
         this.robot = r;
-
         canvas.addKeyListener(this);
         canvas.addMouseMotionListener(this);
         canvas.addMouseListener(this);
         canvas.addGLEventListener(this);
-
     }
 
     /**
@@ -178,16 +163,17 @@ public class Renderer  implements KeyListener, MouseMotionListener, GLEventListe
         posZ = z;
     }
 
-    final Config config = new Config();
+    final Maze config = new Maze();
     
     @Override
     public void init(final GLAutoDrawable drawable)
     {
     	
 		GL2 gl = drawable.getGL().getGL2();	
+		gl.glEnable(GL2.GL_TEXTURE_2D);
 //		
-		gl.glPolygonMode(GL2.GL_FRONT, GL2.GL_LINE);
-		gl.glPolygonMode(GL2.GL_BACK, GL2.GL_LINE);
+//		gl.glPolygonMode(GL2.GL_FRONT, GL2.GL_LINE);
+//		gl.glPolygonMode(GL2.GL_BACK, GL2.GL_LINE);
 //		
 //		gl.glNewList(1, GL2.GL_COMPILE);		
 		gl.glMatrixMode(GL2.GL_MODELVIEW);		
@@ -220,7 +206,6 @@ public class Renderer  implements KeyListener, MouseMotionListener, GLEventListe
         rotV = 0;
         final Rectangle r = canvas.getParent().getBounds();
         final Point p = canvas.getParent().getLocationOnScreen();
-
         centerX = r.x + p.x + width / 2;
         centerY = r.y + p.y + height / 2;
         Boolean value = null;
