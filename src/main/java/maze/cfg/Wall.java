@@ -1,7 +1,13 @@
 package maze.cfg;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2GL3;
+
+import maze.math.Segment;
+import maze.math.Vec2D;
 
 public class Wall {
 	
@@ -38,11 +44,30 @@ public class Wall {
 
 	private final int coordX;
 	private final int coordZ;
+	private final List<Segment> segments;
 	
 	public Wall(int coordX, int coordZ) {
 		super();
 		this.coordX = coordX;
 		this.coordZ = coordZ;
+		this.segments = Arrays.asList(
+			new Segment(
+				new Vec2D((float)(-coordX), (float)(-coordZ)),
+				new Vec2D((float)(-coordX-1), (float)(-coordZ))
+			),
+			new Segment(
+				new Vec2D((float)(-coordX), (float)(-coordZ)),
+				new Vec2D((float)(-coordX), (float)(-coordZ-1))
+			),
+			new Segment(
+				new Vec2D((float)(-coordX-1), (float)(-coordZ)),
+				new Vec2D((float)(-coordX-1), (float)(-coordZ-1))
+			),
+			new Segment(
+				new Vec2D((float)(-coordX), (float)(-coordZ-1)),
+				new Vec2D((float)(-coordX-1), (float)(-coordZ-1))
+			)
+		);
 	}
 	
 	public void init(GL2 gl) {
@@ -50,6 +75,10 @@ public class Wall {
 		gl.glTranslatef((float)coordX, 0, (float)coordZ);
 		drawBox(gl, 1, GL2GL3.GL_QUADS);
 		gl.glPopMatrix();
+	}
+	
+	public List<Segment> getSegments() {
+		return segments;
 	}
 	
 	//GL2GL3.GL_QUADS
@@ -70,5 +99,13 @@ public class Wall {
 			gl.glVertex3f(vt[0] * size, vt[1] * size, vt[2] * size);
 			gl.glEnd();
 		}
+	}
+
+	public int getCoordX() {
+		return coordX;
+	}
+
+	public int getCoordZ() {
+		return coordZ;
 	}	
 }

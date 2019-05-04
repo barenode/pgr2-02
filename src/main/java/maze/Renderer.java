@@ -23,7 +23,7 @@ import maze.cfg.Config;
 import maze.math.Intersect;
 import maze.math.Vec2D;
 
-public class FirstPersonCam  implements KeyListener, MouseMotionListener, GLEventListener, MouseListener
+public class Renderer  implements KeyListener, MouseMotionListener, GLEventListener, MouseListener
 {
 
     private static final int forward = KeyEvent.VK_W;
@@ -42,8 +42,8 @@ public class FirstPersonCam  implements KeyListener, MouseMotionListener, GLEven
     private final GLCanvas canvas;
     private final Robot robot;
     private float rotX, rotY, rotZ, rotV;
-    private float posX;
-    private float posY; 
+    private float posX = -5;
+    private float posY = -0.5f; 
     private float posZ = -5;
     private int centerX, centerY;
     private long lastTime = -1;
@@ -52,7 +52,7 @@ public class FirstPersonCam  implements KeyListener, MouseMotionListener, GLEven
     GLU glu = new GLU();
     
     // a very simple first person shooter style camera
-    public FirstPersonCam(final GLCanvas canvas)
+    public Renderer(final GLCanvas canvas)
     {
 
         // we need the robot to get full control over the mouse
@@ -136,8 +136,8 @@ public class FirstPersonCam  implements KeyListener, MouseMotionListener, GLEven
         }
 
         
-        Vec2D dest = Intersect.collide(posX, posZ, newPosX, newPosZ);
-        
+        Vec2D dest = config.collide(posX, posZ, newPosX, newPosZ);
+//        Vec2D dest = new Vec2D(newPosX, newPosZ);
         
         posX = dest.x;
         posZ = dest.y;
@@ -178,6 +178,8 @@ public class FirstPersonCam  implements KeyListener, MouseMotionListener, GLEven
         posZ = z;
     }
 
+    final Config config = new Config();
+    
     @Override
     public void init(final GLAutoDrawable drawable)
     {
@@ -187,36 +189,27 @@ public class FirstPersonCam  implements KeyListener, MouseMotionListener, GLEven
 		gl.glPolygonMode(GL2.GL_FRONT, GL2.GL_LINE);
 		gl.glPolygonMode(GL2.GL_BACK, GL2.GL_LINE);
 //		
-		gl.glNewList(1, GL2.GL_COMPILE);		
+//		gl.glNewList(1, GL2.GL_COMPILE);		
 		gl.glMatrixMode(GL2.GL_MODELVIEW);		
-		gl.glPushMatrix();
-		glut.glutSolidCube(1);		
-		gl.glScalef(10, 10, 100);
+//		gl.glPushMatrix();
+//		glut.glutSolidCube(1);		
+//		gl.glScalef(10, 10, 100);						
+//		gl.glPopMatrix();		
+//		gl.glEndList();	
 		
-		//glut.glutSolidCube(1);				
-		gl.glPopMatrix();		
-		gl.glEndList();	
-		
-		gl.glNewList(2, GL2.GL_COMPILE);
+//		gl.glNewList(2, GL2.GL_COMPILE);
 		
 		
-////		for (int x=-5; x<=5; x++) {
-//			int x = 0;
-//			int z = 0;
-//			int y = 0;
-////			for (int y=-5; y<=5; y++) {
-////				for (int z=-5; z<=5; z++) {
-//					gl.glPushMatrix();					
-//					gl.glCallList(1);
-//					//gl.glTranslatef(0, 0, -20);
-//					gl.glPopMatrix();
-////				}
-////			}
-////		}
+
+//		gl.glPushMatrix();					
+//		gl.glTranslatef(-1, 0, -1);
+//		gl.glCallList(1);					
+//		gl.glPopMatrix();
+
 		
-		new Config().init(gl);
+		config.init(gl);
 		
-		gl.glEndList();	
+//		gl.glEndList();	
     	
     }
 
@@ -311,8 +304,9 @@ public class FirstPersonCam  implements KeyListener, MouseMotionListener, GLEven
 		
 		gl.glMultMatrixf(getViewMatrix(), 0);
 		
-		gl.glCallList(2);
+		//gl.glCallList(2);
 		
+		config.display(gl);
 		
 		
     	

@@ -1,5 +1,7 @@
 package maze.math;
 
+import java.util.List;
+
 public class Intersect {
 	private static final float SMALL_NUM = .00000001f;
 	
@@ -119,19 +121,7 @@ public class Intersect {
 		return (float)Math.sqrt(x * x + y * y);
 	}
 	
-	private static Vec2D s1p0 = new Vec2D(-0.5f, -0.5f);
-	private static Vec2D s1p1 = new Vec2D(0.5f, -0.5f);
-	
-	private static Vec2D s2p0 = new Vec2D(-0.5f, -0.5f);
-	private static Vec2D s2p1 = new Vec2D(-0.5f, 0.5f);
-	
-	private static Vec2D s3p0 = new Vec2D(-0.5f, 0.5f);
-	private static Vec2D s3p1 = new Vec2D(0.5f, 0.5f);
-	
-	private static Vec2D s4p0 = new Vec2D(0.5f, -0.5f);
-	private static Vec2D s4p1 = new Vec2D(0.5f, 0.5f);
-	
-	public static Vec2D collide(float posX, float posY, float newPosX, float newPosY) {		
+	public static Vec2D collide(float posX, float posY, float newPosX, float newPosY, List<Segment> segments) {		
 		Vec2D p0 = new Vec2D(posX, posY);
 		Vec2D p1 = new Vec2D(newPosX, newPosY);
 		
@@ -141,53 +131,17 @@ public class Intersect {
 		Vec2D intersect = null;
 		boolean changed = false;
 		
-		//1
-		intersect = intersect(p0, dest, s1p0, s1p1);
-		if (intersect!=null) {			
-			System.out.println("intersect1 : " + intersect);
-			float intersectDist = dist(p0, intersect);
-			if (intersectDist<dist) {
-				changed = true;
-				dest = intersect;
-				dist = intersectDist;
+		for (Segment segment : segments) {
+			intersect = intersect(p0, dest, segment.p0, segment.p1);
+			if (intersect!=null) {		
+				float intersectDist = dist(p0, intersect);
+				if (intersectDist<dist) {
+					changed = true;
+					dest = intersect;
+					dist = intersectDist;
+				}
 			}
-		}
-		
-		//2
-		intersect = intersect(p0, dest, s2p0, s2p1);
-		if (intersect!=null) {
-			System.out.println("intersect2 : " + intersect);
-			float intersectDist = dist(p0, intersect);
-			if (intersectDist<dist) {
-				changed = true;
-				dest = intersect;
-				dist = intersectDist;
-			}
-		}
-		
-		//3
-		intersect = intersect(p0, dest, s3p0, s3p1);
-		if (intersect!=null) {
-			System.out.println("intersect3 : " + intersect);
-			float intersectDist = dist(p0, intersect);
-			if (intersectDist<dist) {
-				changed = true;
-				dest = intersect;
-				dist = intersectDist;
-			}
-		}
-		
-		//4
-		intersect = intersect(p0, dest, s4p0, s4p1);
-		if (intersect!=null) {
-			System.out.println("intersect4 : " + intersect);
-			float intersectDist = dist(p0, intersect);
-			if (intersectDist<dist) {
-				changed = true;
-				dest = intersect;
-				dist = intersectDist;
-			}
-		}
+		}		
 		
 		System.out.println("posX: " + posX + ", posY: " + posY + "newPosX: " + newPosX + ", newPosY: " + newPosY + ", dest: " + dest);
 		
@@ -207,10 +161,5 @@ public class Intersect {
 		} else {
 			return dest;
 		}
-		
-		
-		
-		
-		
 	}
 }

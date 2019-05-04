@@ -28,7 +28,7 @@ public class Maze {
 //		canvas.addKeyListener(renderer);
 		
 		
-		FirstPersonCam cam = new FirstPersonCam(canvas);
+		Renderer cam = new Renderer(canvas);
 //		canvas.addGLEventListener(cam);
 //		canvas.addMouseMotionListener(cam);
 //		canvas.addKeyListener(cam);
