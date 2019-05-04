@@ -1,6 +1,6 @@
-package maze;
+package maze.math;
 
-public class Utils {
+public class Intersect {
 	private static final float SMALL_NUM = .00000001f;
 	
 	public static float perp(float x1, float y1, float x2, float y2) {

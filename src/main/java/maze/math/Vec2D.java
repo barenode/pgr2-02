@@ -1,4 +1,4 @@
-package maze;
+package maze.math;
 
 import java.util.Locale;
 import java.util.Objects;

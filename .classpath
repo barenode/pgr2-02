@@ -46,5 +46,4 @@
   <classpathentry kind="var" path="M2_REPO/org/jogamp/jogl/jogl-all/2.3.2/jogl-all-2.3.2-natives-solaris-i586.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/jogamp/jogl/jogl-all/2.3.2/jogl-all-2.3.2-natives-windows-amd64.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/jogamp/jogl/jogl-all/2.3.2/jogl-all-2.3.2-natives-windows-i586.jar"/>
-  <classpathentry kind="var" path="M2_REPO/java3d/j3d-core/1.5.1/j3d-core-1.5.1.jar"/>
 </classpath>

@@ -19,6 +19,10 @@ import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.gl2.GLUT;
 
+import maze.cfg.Config;
+import maze.math.Intersect;
+import maze.math.Vec2D;
+
 public class FirstPersonCam  implements KeyListener, MouseMotionListener, GLEventListener, MouseListener
 {
 
@@ -132,7 +136,7 @@ public class FirstPersonCam  implements KeyListener, MouseMotionListener, GLEven
         }
 
         
-        Vec2D dest = Utils.collide(posX, posZ, newPosX, newPosZ);
+        Vec2D dest = Intersect.collide(posX, posZ, newPosX, newPosZ);
         
         
         posX = dest.x;
@@ -194,19 +198,24 @@ public class FirstPersonCam  implements KeyListener, MouseMotionListener, GLEven
 		gl.glEndList();	
 		
 		gl.glNewList(2, GL2.GL_COMPILE);
-//		for (int x=-5; x<=5; x++) {
-			int x = 0;
-			int z = 0;
-			int y = 0;
-//			for (int y=-5; y<=5; y++) {
-//				for (int z=-5; z<=5; z++) {
-					gl.glPushMatrix();
-					//gl.glTranslatef(0, 0, -20);
-					gl.glCallList(1);
-					gl.glPopMatrix();
-//				}
-//			}
-//		}
+		
+		
+////		for (int x=-5; x<=5; x++) {
+//			int x = 0;
+//			int z = 0;
+//			int y = 0;
+////			for (int y=-5; y<=5; y++) {
+////				for (int z=-5; z<=5; z++) {
+//					gl.glPushMatrix();					
+//					gl.glCallList(1);
+//					//gl.glTranslatef(0, 0, -20);
+//					gl.glPopMatrix();
+////				}
+////			}
+////		}
+		
+		new Config().init(gl);
+		
 		gl.glEndList();	
     	
     }
