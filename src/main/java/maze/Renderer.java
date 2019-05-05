@@ -269,7 +269,7 @@ public class Renderer  implements KeyListener, MouseMotionListener, GLEventListe
 
     @Override public void display(final GLAutoDrawable drawable)
     {
-    	System.out.println("pos(" + posX + ", " + posY + ", " + posZ + ")");
+    	//System.out.println("pos(" + posX + ", " + posY + ", " + posZ + ")");
     	
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glEnable(GL2.GL_DEPTH_TEST);
@@ -290,7 +290,7 @@ public class Renderer  implements KeyListener, MouseMotionListener, GLEventListe
 		gl.glMultMatrixf(getViewMatrix(), 0);
 		
 		//gl.glCallList(2);
-		
+		gl.glEnable(GL2.GL_TEXTURE_2D);
 		config.display(gl);
 		
 		

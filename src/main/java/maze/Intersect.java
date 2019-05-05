@@ -143,7 +143,7 @@ public class Intersect {
 			}
 		}		
 		
-		System.out.println("posX: " + posX + ", posY: " + posY + "newPosX: " + newPosX + ", newPosY: " + newPosY + ", dest: " + dest);
+		//System.out.println("posX: " + posX + ", posY: " + posY + "newPosX: " + newPosX + ", newPosY: " + newPosY + ", dest: " + dest);
 		
 		float finalX, finalY;
 		float offset = .0001f;

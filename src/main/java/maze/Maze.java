@@ -21,11 +21,22 @@ public class Maze {
 		for (int i=0; i<cfg.length; i++) {
 			char[] row = cfg[i];
 			for (int j=0; j<cfg.length; j++) {
+				//floor
+				Floor floor = new Floor(i, j, textureLibrary);
+				floor.init(gl);
+				//ceiling
+				Ceiling ceiling = new Ceiling(i, j, textureLibrary);
+				ceiling.init(gl);
+				//
 				char col = row[j];
 				if ('W'==col) {
-					Wall wall = new Wall(i, j, textureLibrary.getTexture());
+					Wall wall = new Wall(i, j, textureLibrary);
 					walls.add(wall);
 					wall.init(gl);
+				} else if ('S'==col) {
+					Switch s = new Switch(i, j, textureLibrary);
+					//walls.add(wall);
+					s.init(gl);
 				}
 			}
 		}
