@@ -8,7 +8,7 @@ import maze.TextureLibrary.WallFace;
 public class Switch  {
 	
 	private int angle = 0;
-	private int change = 15;
+	private int change = 1;
 
 	private final int coordX;
 	private final int coordZ;	
@@ -21,49 +21,64 @@ public class Switch  {
 		this.textureLibrary = textureLibrary;				
 	}
 	
-	public void init(GL2 gl) {		
+	public void display(GL2 gl) {		
 		gl.glPushMatrix();		
-//		gl.glEnable(GL2.GL_TEXTURE_2D);
 		
-		
-		angle += change;
-		System.out.println("ROTATE: " + angle);
-		
-		gl.glTranslatef((float)coordX, 0, (float)coordZ);
-		gl.glRotatef(angle, 0.4f, 0.6f, 0.4f);
-		//gl.glScalef(0.3f, 0.3f, 0.3f);
-		
-		
-//		Texture texture = textureLibrary.getWallTexture(coordX, coordZ, WallFace.Front);
-//		texture.enable(gl);
-//		texture.bind(gl);	
+		angle += change;		
+		gl.glTranslatef(((float)coordX)+0.5f, 0.3f, ((float)coordZ)+0.5f);
+		gl.glRotatef(angle, 0f, 1f, 0f);
+		gl.glScalef(0.15f, 0.3f, 0.15f);
+		gl.glTranslatef(-0.5f, 0f, -0.5f);		
 
-		
+		Texture texture;
+		//front face
+		texture = textureLibrary.getSwitchTexture(WallFace.Front);
+		texture.enable(gl);
+		texture.bind(gl);
 		gl.glBegin(GL2.GL_QUADS);
-		/*gl.glTexCoord2f(0.4f, 0.4f);*/ gl.glVertex3f(0.4f, 0.6f, 0.4f);
-		/*gl.glTexCoord2f(0.6f, 0.4f);*/ gl.glVertex3f(0.6f, 0.6f, 0.4f);
-		/*gl.glTexCoord2f(0.6f, 0.6f);*/ gl.glVertex3f(0.6f, 0.4f, 0.4f);
-		/*gl.glTexCoord2f(0.4f, 0.6f);*/ gl.glVertex3f(0.4f, 0.4f, 0.4f);
+		gl.glTexCoord2f(0f, 0f); gl.glVertex3f(1f, 0f, 0f); 
+		gl.glTexCoord2f(1f, 0f); gl.glVertex3f(0f, 0f, 0f); 
+		gl.glTexCoord2f(1f, 1f); gl.glVertex3f(0f, 1f, 0f);
+		gl.glTexCoord2f(0f, 1f); gl.glVertex3f(1f, 1f, 0f);
+		gl.glEnd();		
+		texture.disable(gl);
 		
-		/*gl.glTexCoord2f(0.4f, 0.4f);*/ gl.glVertex3f(0.6f, 0.6f, 0.6f);
-		/*gl.glTexCoord2f(0.6f, 0.4f);*/ gl.glVertex3f(0.4f, 0.6f, 0.6f);
-		/*gl.glTexCoord2f(0.6f, 0.6f);*/ gl.glVertex3f(0.4f, 0.4f, 0.6f);
-		/*gl.glTexCoord2f(0.4f, 0.6f);*/ gl.glVertex3f(0.6f, 0.4f, 0.6f);	
-		
-		/*gl.glTexCoord2f(0.4f, 0.4f);*/ gl.glVertex3f(0.6f, 0.6f, 0.4f);
-		/*gl.glTexCoord2f(0.6f, 0.4f);*/ gl.glVertex3f(0.6f, 0.6f, 0.6f);
-		/*gl.glTexCoord2f(0.6f, 0.6f);*/ gl.glVertex3f(0.6f, 0.4f, 0.6f);
-		/*gl.glTexCoord2f(0.4f, 0.6f);*/ gl.glVertex3f(0.6f, 0.4f, 0.4f);
-		
-		/*gl.glTexCoord2f(0.4f, 0.4f);*/ gl.glVertex3f(0.4f, 0.6f, 0.6f);
-		/*gl.glTexCoord2f(0.6f, 0.4f);*/ gl.glVertex3f(0.4f, 0.6f, 0.4f);
-		/*gl.glTexCoord2f(0.6f, 0.6f);*/ gl.glVertex3f(0.4f, 0.4f, 0.4f);
-		/*gl.glTexCoord2f(0.4f, 0.6f);*/ gl.glVertex3f(0.4f, 0.4f, 0.6f);		
+		//back face
+		texture = textureLibrary.getSwitchTexture(WallFace.Back);
+		texture.enable(gl);
+		texture.bind(gl);
+		gl.glBegin(GL2.GL_QUADS);
+		gl.glTexCoord2f(0f, 0f); gl.glVertex3f(0f, 0f, 1f);
+		gl.glTexCoord2f(1f, 0f); gl.glVertex3f(1f, 0f, 1f);		
+		gl.glTexCoord2f(1f, 1f); gl.glVertex3f(1f, 1f, 1f);
+		gl.glTexCoord2f(0f, 1f); gl.glVertex3f(0f, 1f, 1f);
 		gl.glEnd();
+		texture.disable(gl);		
 		
-//		texture.disable(gl);
-//		gl.glDisable(GL2.GL_TEXTURE_2D);
-		gl.glPopMatrix();
-		
+		//right face
+		texture = textureLibrary.getSwitchTexture(WallFace.Right);
+		texture.enable(gl);
+		texture.bind(gl);
+		gl.glBegin(GL2.GL_QUADS);
+		gl.glTexCoord2f(0f, 0f); gl.glVertex3f(1f, 0f, 1f);
+		gl.glTexCoord2f(1f, 0f); gl.glVertex3f(1f, 0f, 0f);
+		gl.glTexCoord2f(1f, 1f); gl.glVertex3f(1f, 1f, 0f);
+		gl.glTexCoord2f(0f, 1f); gl.glVertex3f(1f, 1f, 1f);
+		gl.glEnd();
+		texture.disable(gl);
+
+		//left face
+		texture = textureLibrary.getSwitchTexture(WallFace.Left);
+		texture.enable(gl);
+		texture.bind(gl);
+		gl.glBegin(GL2.GL_QUADS);
+		gl.glTexCoord2f(0f, 0f); gl.glVertex3f(0f, 0f, 0f);
+		gl.glTexCoord2f(1f, 0f); gl.glVertex3f(0f, 0f, 1f);
+		gl.glTexCoord2f(1f, 1f); gl.glVertex3f(0f, 1f, 1f);
+		gl.glTexCoord2f(0f, 1f); gl.glVertex3f(0f, 1f, 0f);
+		gl.glEnd();
+		texture.disable(gl);		
+
+		gl.glPopMatrix();		
 	}	
 }

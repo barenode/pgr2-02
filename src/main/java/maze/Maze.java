@@ -13,6 +13,7 @@ public class Maze {
 	
 	private TextureLibrary textureLibrary = new TextureLibrary();
 	private List<Wall> walls = new ArrayList<>(); 
+	private List<Switch> switches = new ArrayList<>(); 
 	
 	public void init(GL2 gl) {
 		textureLibrary.init(gl);
@@ -35,16 +36,16 @@ public class Maze {
 					wall.init(gl);
 				} else if ('S'==col) {
 					Switch s = new Switch(i, j, textureLibrary);
-					//walls.add(wall);
-					s.init(gl);
+					switches.add(s);
 				}
 			}
 		}
 		gl.glEndList();
 	}
 	
-	public void display(GL2 gl) {
+	public void display(GL2 gl) {		
 		gl.glCallList(2);
+		switches.forEach(s->s.display(gl));
 	}
 	
 	public Vec2D collide(float posX, float posY, float newPosX, float newPosY) {		

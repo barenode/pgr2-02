@@ -11,6 +11,8 @@ public class TextureLibrary {
 	
 	Map<WallTexturePointer, Texture> wallTextures = new HashMap<>();
 	Map<CeilingTexturePointer, Texture> ceilingTextures = new HashMap<>();
+	Map<WallTexturePointer, Texture> switchTextures = new HashMap<>();
+	
 	
 	//WALL
 	/**
@@ -92,7 +94,17 @@ public class TextureLibrary {
 			Texture c02 = loadTexture("pk02_ceiling02_C", gl);
 			ceilingTextures.put(new CeilingTexturePointer(1), c02);
 			Texture c03 = loadTexture("pk02_ceiling03_C", gl);
-			ceilingTextures.put(new CeilingTexturePointer(2), c03);
+			ceilingTextures.put(new CeilingTexturePointer(2), c03);			
+			
+			//SWITCH
+			Texture s01 = loadTexture("pk02_switches01a_C", gl);
+			switchTextures.put(new WallTexturePointer(1, WallFace.Right), s01);
+			switchTextures.put(new WallTexturePointer(1, WallFace.Left), s01);						
+			Texture s02 = loadTexture("pk02_switches01b_C", gl);
+			switchTextures.put(new WallTexturePointer(1, WallFace.Front), s02);		
+			Texture s03 = loadTexture("pk02_switches01c_C", gl);
+			switchTextures.put(new WallTexturePointer(1, WallFace.Back), s03);
+			
 		} catch (Exception e) {
 			throw new IllegalStateException(e);
 		}
@@ -110,19 +122,25 @@ public class TextureLibrary {
 		WallTexturePointer p = new WallTexturePointer(tp, face);
 		if (!wallTextures.containsKey(p)) {
 			throw new IllegalArgumentException("No wall texture for " + tp + "/" + face);
-		}		
-		System.out.println("Get texturew: " + p);
+		}	
 		return wallTextures.get(p);
 	}
 	
 	public Texture getCeilingTexture(int coordX, int coordZ) {
-		int tp = (coordX + coordZ)%2+1;
+		int tp = coordX%2+1;
 		CeilingTexturePointer p = new CeilingTexturePointer(tp);
 		if (!ceilingTextures.containsKey(p)) {
 			throw new IllegalArgumentException("No ceiling texture for " + tp);
-		}		
-		System.out.println("Get texturew: " + p);
+		}	
 		return ceilingTextures.get(p);
+	}
+	
+	public Texture getSwitchTexture(WallFace face) {
+		WallTexturePointer p = new WallTexturePointer(1, face);
+		if (!switchTextures.containsKey(p)) {
+			throw new IllegalArgumentException("No switch texture for " + p + "/" + face);
+		}
+		return switchTextures.get(p);
 	}
 	
 	public enum WallFace {
