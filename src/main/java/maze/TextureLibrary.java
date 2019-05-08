@@ -10,6 +10,7 @@ import com.jogamp.opengl.util.texture.TextureIO;
 public class TextureLibrary {
 	
 	Map<WallTexturePointer, Texture> wallTextures = new HashMap<>();
+	Map<CeilingTexturePointer, Texture> floorTextures = new HashMap<>();
 	Map<CeilingTexturePointer, Texture> ceilingTextures = new HashMap<>();
 	Map<WallTexturePointer, Texture> switchTextures = new HashMap<>();
 	
@@ -90,6 +91,18 @@ public class TextureLibrary {
 			wallTextures.put(new WallTexturePointer(7, WallFace.Back), w07a);
 			wallTextures.put(new WallTexturePointer(7, WallFace.Left), w07b);
 			
+			//FLOOR
+			Texture f08a = loadTexture("pk02_floor08a_C", gl);
+			floorTextures.put(new CeilingTexturePointer(1), f08a);
+			Texture f08b = loadTexture("pk02_floor08b_C", gl);
+			floorTextures.put(new CeilingTexturePointer(2), f08b);
+			Texture f09a = loadTexture("pk02_floor09a_C", gl);
+			floorTextures.put(new CeilingTexturePointer(3), f09a);
+//			Texture f13a = loadTexture("pk02_floor13a_C", gl);
+//			floorTextures.put(new CeilingTexturePointer(4), f13a);
+			Texture fcyl02 = loadTexture("pk02_floor_cyl02_C", gl);
+			floorTextures.put(new CeilingTexturePointer(4), fcyl02);
+			
 			//CEILING
 			Texture c02 = loadTexture("pk02_ceiling02_C", gl);
 			ceilingTextures.put(new CeilingTexturePointer(1), c02);
@@ -133,6 +146,15 @@ public class TextureLibrary {
 			throw new IllegalArgumentException("No ceiling texture for " + tp);
 		}	
 		return ceilingTextures.get(p);
+	}
+	
+	public Texture getFloorTexture(int coordX, int coordZ) {
+		int tp = (coordX + coordZ)%4+1;
+		CeilingTexturePointer p = new CeilingTexturePointer(tp);
+		if (!floorTextures.containsKey(p)) {
+			throw new IllegalArgumentException("No floor texture for " + tp);
+		}	
+		return floorTextures.get(p);
 	}
 	
 	public Texture getSwitchTexture(WallFace face) {
