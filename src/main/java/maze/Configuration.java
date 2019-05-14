@@ -10,14 +10,24 @@ public class Configuration {
 		try {
 			char[][] maze = new char[20][20];
 			int row = 0;	
-			InputStream in = Maze.class.getResourceAsStream("/maze.cfg");
+			InputStream in = Maze.class.getResourceAsStream("/maze.cfg.2");
 			BufferedReader reader = new BufferedReader(new InputStreamReader(in));		
 			while(reader.ready()) {
-			     String line = reader.readLine();
-			     System.out.println(row + " : " + line + "");
-			     for (int col=0; col<20; col++) {
-			    	 maze[row][col] = line.charAt(col);
-			     }
+			     String line1 = reader.readLine();			    
+			     String[] line1Parts = line1.split("\\|");
+			     System.out.println(line1Parts.length);
+			     
+			     String line2 = reader.readLine();
+			     String[] line2Parts = line2.split("\\|");
+			     System.out.println(line2Parts.length);
+			     
+			     //line separator
+			     String line3 = reader.readLine();
+			     //System.out.println(line3);
+			     for (int i=0; i<line1Parts.length; i++) {
+			    	 String def = "(" + line1Parts[i] + line2Parts[i] + ")";
+			    	 System.out.println(def);
+			     }		
 			     row++;
 			}			
 			//return maze;
@@ -27,6 +37,6 @@ public class Configuration {
 	}
 	
 	public static void main(String[] args) {
-		
+		new Configuration().read();
 	}
 }

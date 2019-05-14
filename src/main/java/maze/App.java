@@ -17,7 +17,7 @@ public class App {
 		GLProfile profile = GLProfile.get(GLProfile.GL2);
     	GLCapabilities capabilities = new GLCapabilities(profile);
     	GLCanvas canvas = new GLCanvas(capabilities);    	
-    	canvas.setSize(1024, 768);
+    	canvas.setSize(1920, 1017);
     	
     	//SolidRenderer renderer = new SolidRenderer();//new jogl06pushpopclip.TestRenderer();
     	
@@ -35,7 +35,7 @@ public class App {
 		
 		
 		Frame frame = new Frame("Maze");
-		frame.setSize(1024, 768);
+		//frame.setSize(1920, 1017);
 		frame.add(canvas);
 		
 		FPSAnimator animator = new FPSAnimator(canvas, 60, true);

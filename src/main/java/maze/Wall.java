@@ -12,14 +12,17 @@ public class Wall {
 
 	private final int coordX;
 	private final int coordZ;
+	private final String def;
 	private final List<Segment> segments;
 	
 	private final TextureLibrary textureLibrary;
 	
-	public Wall(int coordX, int coordZ, TextureLibrary textureLibrary) {
+	public Wall(int coordX, int coordZ, String def, TextureLibrary textureLibrary) {
 		super();
+		System.out.println("DEF: " + def);
 		this.coordX = coordX;
 		this.coordZ = coordZ;
+		this.def = def;
 		this.textureLibrary = textureLibrary;
 		
 		float set = 0.2f;
@@ -46,20 +49,9 @@ public class Wall {
 		gl.glTranslatef((float)coordX, 0, (float)coordZ);
 		
 		Texture texture;
-		//front face
-		texture = textureLibrary.getWallTexture(coordX, coordZ, WallFace.Front);
-		texture.enable(gl);
-		texture.bind(gl);
-		gl.glBegin(GL2.GL_QUADS);
-		gl.glTexCoord2f(0f, 0f); gl.glVertex3f(1f, 0f, 0f);
-		gl.glTexCoord2f(1f, 0f); gl.glVertex3f(0f, 0f, 0f);
-		gl.glTexCoord2f(1f, 1f); gl.glVertex3f(0f, 1f, 0f);
-		gl.glTexCoord2f(0f, 1f); gl.glVertex3f(1f, 1f, 0f);
-		gl.glEnd();		
-		texture.disable(gl);				
 		
-		//back face
-		texture = textureLibrary.getWallTexture(coordX, coordZ, WallFace.Back);
+		//north
+		texture = textureLibrary.getWallTexture(def.charAt(3));
 		texture.enable(gl);
 		texture.bind(gl);
 		gl.glBegin(GL2.GL_QUADS);
@@ -68,10 +60,10 @@ public class Wall {
 		gl.glTexCoord2f(1f, 1f); gl.glVertex3f(1f, 1f, 1f);
 		gl.glTexCoord2f(0f, 1f); gl.glVertex3f(0f, 1f, 1f);
 		gl.glEnd();
-		texture.disable(gl);		
+		texture.disable(gl);	
 		
-		//right face
-		texture = textureLibrary.getWallTexture(coordX, coordZ, WallFace.Right);
+		//east
+		texture = textureLibrary.getWallTexture(def.charAt(1));
 		texture.enable(gl);
 		texture.bind(gl);
 		gl.glBegin(GL2.GL_QUADS);
@@ -80,10 +72,22 @@ public class Wall {
 		gl.glTexCoord2f(1f, 1f); gl.glVertex3f(1f, 1f, 0f);
 		gl.glTexCoord2f(0f, 1f); gl.glVertex3f(1f, 1f, 1f);
 		gl.glEnd();
+		texture.disable(gl);	
+				
+		//south
+		texture = textureLibrary.getWallTexture(def.charAt(0));
+		texture.enable(gl);
+		texture.bind(gl);
+		gl.glBegin(GL2.GL_QUADS);
+		gl.glTexCoord2f(0f, 0f); gl.glVertex3f(1f, 0f, 0f);
+		gl.glTexCoord2f(1f, 0f); gl.glVertex3f(0f, 0f, 0f);
+		gl.glTexCoord2f(1f, 1f); gl.glVertex3f(0f, 1f, 0f);
+		gl.glTexCoord2f(0f, 1f); gl.glVertex3f(1f, 1f, 0f);
+		gl.glEnd();		
 		texture.disable(gl);		
-		
-		//left face
-		texture = textureLibrary.getWallTexture(coordX, coordZ, WallFace.Left);
+						
+		//west
+		texture = textureLibrary.getWallTexture(def.charAt(2));
 		texture.enable(gl);
 		texture.bind(gl);
 		gl.glBegin(GL2.GL_QUADS);

@@ -203,7 +203,7 @@ public class Renderer  implements KeyListener, MouseMotionListener, GLEventListe
     @Override
     public void reshape(final GLAutoDrawable drawable, final int x, final int y, final int width, final int height)
     {
-        rotV = 0;
+    	rotV = 0;
         final Rectangle r = canvas.getParent().getBounds();
         final Point p = canvas.getParent().getLocationOnScreen();
         centerX = r.x + p.x + width / 2;
