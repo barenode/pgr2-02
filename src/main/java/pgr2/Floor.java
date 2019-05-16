@@ -1,4 +1,4 @@
-package maze;
+package pgr2;
 
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.texture.Texture;

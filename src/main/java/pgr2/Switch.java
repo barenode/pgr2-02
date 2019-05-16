@@ -1,9 +1,9 @@
-package maze;
+package pgr2;
 
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.texture.Texture;
 
-import maze.TextureLibrary.WallFace;
+import pgr2.TextureLibrary.WallFace;
 
 public class Switch  {
 	

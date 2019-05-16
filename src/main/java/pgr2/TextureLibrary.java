@@ -1,4 +1,4 @@
-package maze;
+package pgr2;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package maze;
+package pgr2;
 
 public class Segment {
 

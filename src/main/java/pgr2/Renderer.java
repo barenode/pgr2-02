@@ -1,4 +1,4 @@
-package maze;
+package pgr2;
 
 import java.awt.AWTException;
 import java.awt.Point;

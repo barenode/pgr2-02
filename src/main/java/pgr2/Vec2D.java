@@ -1,4 +1,4 @@
-package maze;
+package pgr2;
 
 import java.util.Locale;
 import java.util.Objects;

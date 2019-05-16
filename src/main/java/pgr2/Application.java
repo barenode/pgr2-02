@@ -1,4 +1,4 @@
-package maze;
+package pgr2;
 
 import java.awt.Frame;
 import java.awt.event.WindowAdapter;
@@ -19,7 +19,7 @@ public class Application {
     	GLCanvas canvas = new GLCanvas(capabilities);    	
     	canvas.setSize(1920, 1017);		
 		new Renderer(canvas);
-		Frame frame = new Frame("Maze");
+		Frame frame = new Frame("Stand Alone Complex v.1.0");
 		frame.add(canvas);		
 		FPSAnimator animator = new FPSAnimator(canvas, 60, true);
 		frame.addWindowListener(new WindowAdapter() {

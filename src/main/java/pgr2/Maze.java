@@ -1,4 +1,4 @@
-package maze;
+package pgr2;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
