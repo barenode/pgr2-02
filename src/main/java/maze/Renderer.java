@@ -12,6 +12,8 @@ import java.awt.event.MouseMotionListener;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.swing.JOptionPane;
+
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
@@ -28,45 +30,71 @@ public class Renderer  implements KeyListener, MouseMotionListener, GLEventListe
     private static final int rightward = KeyEvent.VK_D;
     private static final int space = KeyEvent.VK_SPACE;
     private static final int shift = KeyEvent.VK_SHIFT;
-
     private static final int mouseSpeed = 1;
     private static final int keySpeed = 1;
     private static final int rotVMax = 1;
     private static final int rotVMin = -1;
+    
     private final Map<Integer, Boolean> keys = new ConcurrentHashMap<Integer, Boolean>();
-    private final float[] modelview = new float[16];
+    private final float posY = -0.5f; 
+    
+    private float[] modelview = new float[16];
     private final GLCanvas canvas;
+    private final Maze maze;
     private final Robot robot;
     private float rotX, rotY, rotZ, rotV;
     private float posX = -5;
-    private float posY = -0.5f; 
+    
     private float posZ = -5;
     private int centerX, centerY;
     private long lastTime = -1;
+    
+   
     
     GLUT glut = new GLUT();
     GLU glu = new GLU();    
 
     public Renderer(final GLCanvas canvas) {
+    	super();
+    	this.canvas = canvas;
+    	this.maze = new Maze(this, canvas);
+    	init();
+    	
     	Robot r = null;
         try {
             r = new Robot();
         } catch (final AWTException e) {
             throw new IllegalStateException(e);            
         }
-        // setup the modelview matrix
-        for (int i = 0; i < 4; i++)
-            modelview[i * 5] = 1.0f;
-
-        this.canvas = canvas;
+        
         this.robot = r;
         canvas.addKeyListener(this);
         canvas.addMouseMotionListener(this);
         canvas.addMouseListener(this);
-        canvas.addGLEventListener(this);
+        canvas.addGLEventListener(this);                
+    }    
+    
+    private void init() {
+    	
+    	keys.clear();
+    	modelview = new float[16];
+    	// setup the modelview matrix
+        for (int i = 0; i < 4; i++)
+            modelview[i * 5] = 1.0f;
+        
+        rotX = rotY = rotZ = rotV = 0f;
+        posX = posZ = -5f;
     }
 
-    /**
+    public float getPosX() {
+		return posX;
+	}
+
+	public float getPosZ() {
+		return posZ;
+	}
+
+	/**
      * Berrechnet die aktuelle View Matrix aus der aktuellen Kamera Position
      */
     public float[] getViewMatrix() {
@@ -121,7 +149,7 @@ public class Renderer  implements KeyListener, MouseMotionListener, GLEventListe
         }
 
         
-        Vec2D dest = config.collide(posX, posZ, newPosX, newPosZ);
+        Vec2D dest = maze.collide(posX, posZ, newPosX, newPosZ);
 //        Vec2D dest = new Vec2D(newPosX, newPosZ);
         
         posX = dest.x;
@@ -155,15 +183,12 @@ public class Renderer  implements KeyListener, MouseMotionListener, GLEventListe
 
     }
     
-    public void setPosition(float x, float y, float z){
-        
-    	
+    public void setPosition(float x, float z) {            	
     	posX = x;
-        posY = y;
         posZ = z;
     }
 
-    final Maze config = new Maze();
+    
     
     @Override
     public void init(final GLAutoDrawable drawable)
@@ -193,7 +218,7 @@ public class Renderer  implements KeyListener, MouseMotionListener, GLEventListe
 //		gl.glPopMatrix();
 
 		
-		config.init(gl);
+		maze.init(gl);
 		
 //		gl.glEndList();	
     	
@@ -212,6 +237,9 @@ public class Renderer  implements KeyListener, MouseMotionListener, GLEventListe
         if ((value = keys.get(space)) != null && value == true)
             if (robot != null)
                 robot.mouseMove(centerX, centerY);
+        
+        GL2 gl = drawable.getGL().getGL2();
+
     }
 
     
@@ -291,7 +319,7 @@ public class Renderer  implements KeyListener, MouseMotionListener, GLEventListe
 		
 		//gl.glCallList(2);
 		gl.glEnable(GL2.GL_TEXTURE_2D);
-		config.display(gl);
+		maze.display(drawable);
 		
 		
     	
@@ -328,5 +356,10 @@ public class Renderer  implements KeyListener, MouseMotionListener, GLEventListe
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		pressed = false;		
+	}
+	
+	public void onMazeCompleted() {
+		 JOptionPane.showConfirmDialog(null, "Mission Completed!", "Info", JOptionPane.DEFAULT_OPTION);		
+		 init();
 	}
 }

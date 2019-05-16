@@ -4,16 +4,35 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.awt.GLCanvas;
 
 public class Maze {
+	
+	private final Renderer renderer;
+	private final GLCanvas canvas;
 	
 	private TextureLibrary textureLibrary = new TextureLibrary();
 	private List<Wall> walls = new ArrayList<>(); 
 	private List<Switch> switches = new ArrayList<>(); 
+	
+	private InfoBar infoBar;
+	
+	private int totalSwitches = 0;
+	private Set<KeyPos> visitedSwitches = new HashSet<>(); 
+	
+	public Maze(Renderer renderer, GLCanvas canvas) {
+		super();
+		this.renderer = renderer;
+		this.canvas = canvas;
+		infoBar = new InfoBar(canvas, this);
+	}
 	
 	public void init(GL2 gl) {
 		try {			
@@ -48,7 +67,8 @@ public class Maze {
 			    		 wall.init(gl);
 			    	 }
 			    	 if (isSwitch(def)) {
-						Switch s = new Switch(i, j, textureLibrary);
+			    		totalSwitches++;
+						Switch s = new Switch(this, renderer, i, j, textureLibrary);
 						switches.add(s);
 			    	 }
 			    	 if (isFloor(def)) {
@@ -58,6 +78,8 @@ public class Maze {
 			     }		
 			     j++;
 			}	
+			
+			
 		
 		
 //		char[][] cfg = read();
@@ -117,9 +139,11 @@ public class Maze {
 	}
 	
 	
-	public void display(GL2 gl) {		
+	public void display(GLAutoDrawable drawable) {		
+		GL2 gl = drawable.getGL().getGL2();
 		gl.glCallList(2);
 		switches.forEach(s->s.display(gl));
+		infoBar.display(drawable);
 	}
 	
 	public Vec2D collide(float posX, float posY, float newPosX, float newPosY) {		
@@ -129,6 +153,59 @@ public class Maze {
 	public List<Segment> getSegments(float posX, float posZ) {
 		return walls.stream().map(w->w.getSegments()).flatMap(s->s.stream()).collect(Collectors.toList());
 	}	
+	
+	public int getTotalSwitches() {
+		return totalSwitches;
+	}
+	
+	public int getVisitedSwitches() {
+		return visitedSwitches.size();
+	}
+	
+	public void onSwitchVisited(int coordX, int coordZ) {
+		KeyPos pos = new KeyPos(coordX, coordZ);
+		if (!visitedSwitches.contains(pos)) {
+			visitedSwitches.add(pos);
+		}
+		if (visitedSwitches.size()==totalSwitches) {
+			renderer.onMazeCompleted();
+			visitedSwitches.clear();
+		}
+	}
+	
+	private static final class KeyPos {
+		private final int coordX;
+		private final int coordZ;	
+		public KeyPos(int coordX, int coordZ) {
+			super();
+			this.coordX = coordX;
+			this.coordZ = coordZ;
+		}
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + coordX;
+			result = prime * result + coordZ;
+			return result;
+		}
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			KeyPos other = (KeyPos) obj;
+			if (coordX != other.coordX)
+				return false;
+			if (coordZ != other.coordZ)
+				return false;
+			return true;
+		}	
+	}
+	
 	
 	private char[][] read() {
 		try {

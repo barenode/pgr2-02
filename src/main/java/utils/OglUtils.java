@@ -69,7 +69,7 @@ public class OglUtils {
 		
 		//pop all parameters
 		popAll(glDrawable, shaderProgram);
-		}
+	}
 	 
 	 private static int pushAll(GLAutoDrawable glDrawable){
 		 	if (glDrawable == null)

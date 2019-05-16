@@ -14,14 +14,26 @@ public class Switch  {
 	private final int coordZ;	
 	private final TextureLibrary textureLibrary;
 	
-	public Switch(int coordX, int coordZ, TextureLibrary textureLibrary) {
+	private final Maze maze;
+	private final Renderer renderer;
+	
+	public Switch(Maze maze, Renderer renderer, int coordX, int coordZ, TextureLibrary textureLibrary) {
 		super();
+		this.maze = maze;
+		this.renderer = renderer;
 		this.coordX = coordX;
 		this.coordZ = coordZ;
 		this.textureLibrary = textureLibrary;				
 	}
 	
 	public void display(GL2 gl) {		
+		int x = (int)Math.abs(renderer.getPosX());
+		int z = (int)Math.abs(renderer.getPosZ());
+		System.out.println("x: " + x + ", z: " + z + " coordX: " + coordX + ", coordZ: " + coordZ) ;
+		if (x==coordX && z==coordZ) {
+			maze.onSwitchVisited(coordX, coordZ);
+		}
+		
 		gl.glPushMatrix();		
 		
 		angle += change;		
