@@ -7,8 +7,6 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.awt.TextRenderer;
 
-import utils.OglUtils;
-
 public class InfoBar {
 
 	private final GLCanvas canvas;	
@@ -20,30 +18,11 @@ public class InfoBar {
 		this.maze = maze;
 	}
 	
-	public void display(GLAutoDrawable drawable) {		
-//		gl.glBegin(GL2.GL_TRIANGLES); // vykreslime trojuhelnik
-//		gl.glColor3f(1.0f, 0.0f, 0.0f); // barva prvniho vrcholu CERVENA
-//		gl.glVertex2f(10f, 10f); // souradnice v 2D (levy dolni roh)
-//		gl.glColor3f(0.0f, 1.0f, 0.0f); // barva prvniho vrcholu ZELENA
-//		gl.glVertex2f(100f, 100f); // souradnice v 2D (stred prave strany)
-//		gl.glColor3f(0.0f, 0.0f, 1.0f); // barva prvniho vrcholu MODRA
-//		gl.glVertex2f(200f, 200f); // souradnice v 2D (stred horni strany)
-//		gl.glEnd(); // ukoncime kresleni trojuhelniku
-		
-		//OglUtils.drawStr2D(glDrawable, 3, height-20, text);
-		//g.drawString("[WSAD], myö - pohyb, pohled", 30, 30);
-		//.g.drawString("Frantiöek Hylmar KPGR2 2019 ", 600, 550);//680, 580);
-
-		
-//		OglUtils.drawStr2D(drawable, 30, 40, "MISSION OBJECTIVE: Find switches 0/5");
-//		OglUtils.drawStr2D(drawable, canvas.getWidth()-200, 40, " [WSAD], myö - pohyb, pohled");
-//		OglUtils.drawStr2D(drawable, canvas.getWidth()-200, 20, " Frantiöek Hylmar KPGR2 2019");
-		
-		
-		if (drawable == null)
+	public void display(GLAutoDrawable drawable) {				
+		if (drawable == null) {
 			return;
+		}
 		GL2 gl = drawable.getGL().getGL2();
-
 		//push all parameters
 		int shaderProgram = pushAll(drawable);
 		gl.glDisable(GL2.GL_TEXTURE_2D);
@@ -63,8 +42,8 @@ public class InfoBar {
 				drawable.getSurfaceHeight());
 		
 		renderer.draw("MISSION OBJECTIVE: Find switches " + maze.getVisitedSwitches() + "/" + maze.getTotalSwitches(), 30, 40);
-		renderer.draw("[WSAD], myö - pohyb, pohled", canvas.getWidth()-200, 40);
-		renderer.draw("Frantiöek Hylmar KPGR2 2019", canvas.getWidth()-200, 20);
+		renderer.draw("[WSAD], my≈° - pohyb, pohled", canvas.getWidth()-200, 40);
+		renderer.draw("Franti≈°ek Hylmar KPGR2 2019", canvas.getWidth()-200, 20);
 		
 		renderer.endRendering();
 		
@@ -73,10 +52,10 @@ public class InfoBar {
 	}
 	
 	private int pushAll(GLAutoDrawable glDrawable){
-	 	if (glDrawable == null)
+	 	if (glDrawable == null) {
 			return 0;
+	 	}
 		GL2 gl = glDrawable.getGL().getGL2();
-
 		//push all parameters
 		int[] shaderProgram = new int[1];
 		gl.glUseProgram(0);
@@ -100,22 +79,22 @@ public class InfoBar {
 		gl.glLoadIdentity();
 		
 		return shaderProgram[0];
- }
+	}
  
- private void popAll(GLAutoDrawable glDrawable, int shaderProgram){
-	 if (glDrawable == null)
+	private void popAll(GLAutoDrawable glDrawable, int shaderProgram){
+		 if (glDrawable == null) {
 			return;
-		GL2 gl = glDrawable.getGL().getGL2();
-
-		//pop all parameters
-		gl.glPopMatrix();
-		gl.glMatrixMode(GL2.GL_PROJECTION);
-		gl.glPopMatrix();
-		gl.glPopAttrib();
-		gl.glPopAttrib();
-		gl.glPopAttrib();
-		gl.glPopAttrib();
-		gl.glPopAttrib();
-		gl.glUseProgram(shaderProgram);
- }
+		 }
+		 GL2 gl = glDrawable.getGL().getGL2();		
+		 //pop all parameters
+		 gl.glPopMatrix();
+		 gl.glMatrixMode(GL2.GL_PROJECTION);
+		 gl.glPopMatrix();
+		 gl.glPopAttrib();
+		 gl.glPopAttrib();
+		 gl.glPopAttrib();
+		 gl.glPopAttrib();
+		 gl.glPopAttrib();
+		 gl.glUseProgram(shaderProgram);
+	}
 }

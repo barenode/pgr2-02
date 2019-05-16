@@ -6,8 +6,6 @@ import java.util.List;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.texture.Texture;
 
-import maze.TextureLibrary.WallFace;
-
 public class Wall {	
 
 	private final int coordX;
@@ -18,8 +16,7 @@ public class Wall {
 	private final TextureLibrary textureLibrary;
 	
 	public Wall(int coordX, int coordZ, String def, TextureLibrary textureLibrary) {
-		super();
-		System.out.println("DEF: " + def);
+		super();		
 		this.coordX = coordX;
 		this.coordZ = coordZ;
 		this.def = def;

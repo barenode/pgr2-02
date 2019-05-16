@@ -29,7 +29,6 @@ public class Switch  {
 	public void display(GL2 gl) {		
 		int x = (int)Math.abs(renderer.getPosX());
 		int z = (int)Math.abs(renderer.getPosZ());
-		System.out.println("x: " + x + ", z: " + z + " coordX: " + coordX + ", coordZ: " + coordZ) ;
 		if (x==coordX && z==coordZ) {
 			maze.onSwitchVisited(coordX, coordZ);
 		}

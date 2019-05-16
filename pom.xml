@@ -32,7 +32,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>maze.App</mainClass>
+							<mainClass>maze.Application</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

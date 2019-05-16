@@ -21,8 +21,7 @@ import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.gl2.GLUT;
 
-public class Renderer  implements KeyListener, MouseMotionListener, GLEventListener, MouseListener
-{
+public class Renderer  implements KeyListener, MouseMotionListener, GLEventListener, MouseListener {
 
     private static final int forward = KeyEvent.VK_W;
     private static final int backward = KeyEvent.VK_S;
@@ -43,13 +42,9 @@ public class Renderer  implements KeyListener, MouseMotionListener, GLEventListe
     private final Maze maze;
     private final Robot robot;
     private float rotX, rotY, rotZ, rotV;
-    private float posX = -5;
-    
-    private float posZ = -5;
+    private float posX, posZ;
     private int centerX, centerY;
-    private long lastTime = -1;
-    
-   
+    private long lastTime = -1;   
     
     GLUT glut = new GLUT();
     GLU glu = new GLU();    
@@ -74,8 +69,7 @@ public class Renderer  implements KeyListener, MouseMotionListener, GLEventListe
         canvas.addGLEventListener(this);                
     }    
     
-    private void init() {
-    	
+    private void init() {    	
     	keys.clear();
     	modelview = new float[16];
     	// setup the modelview matrix
@@ -94,21 +88,18 @@ public class Renderer  implements KeyListener, MouseMotionListener, GLEventListe
 		return posZ;
 	}
 
-	/**
-     * Berrechnet die aktuelle View Matrix aus der aktuellen Kamera Position
-     */
     public float[] getViewMatrix() {
         calculatePosition();
         calculateModelview();
         return modelview;
     }
 
-    private void calculatePosition()
-    {
+    private void calculatePosition() {
+    
 
-        if (lastTime == -1)
+        if (lastTime == -1) {
             lastTime = System.nanoTime();
-
+        }
         double mul = 1.0;
 
         Boolean value = null;
@@ -191,43 +182,15 @@ public class Renderer  implements KeyListener, MouseMotionListener, GLEventListe
     
     
     @Override
-    public void init(final GLAutoDrawable drawable)
-    {
-    	
+    public void init(final GLAutoDrawable drawable) {        	
 		GL2 gl = drawable.getGL().getGL2();	
-		gl.glEnable(GL2.GL_TEXTURE_2D);
-//		
-//		gl.glPolygonMode(GL2.GL_FRONT, GL2.GL_LINE);
-//		gl.glPolygonMode(GL2.GL_BACK, GL2.GL_LINE);
-//		
-//		gl.glNewList(1, GL2.GL_COMPILE);		
+		gl.glEnable(GL2.GL_TEXTURE_2D);	
 		gl.glMatrixMode(GL2.GL_MODELVIEW);		
-//		gl.glPushMatrix();
-//		glut.glutSolidCube(1);		
-//		gl.glScalef(10, 10, 100);						
-//		gl.glPopMatrix();		
-//		gl.glEndList();	
-		
-//		gl.glNewList(2, GL2.GL_COMPILE);
-		
-		
-
-//		gl.glPushMatrix();					
-//		gl.glTranslatef(-1, 0, -1);
-//		gl.glCallList(1);					
-//		gl.glPopMatrix();
-
-		
 		maze.init(gl);
-		
-//		gl.glEndList();	
-    	
     }
-
     
     @Override
-    public void reshape(final GLAutoDrawable drawable, final int x, final int y, final int width, final int height)
-    {
+    public void reshape(final GLAutoDrawable drawable, final int x, final int y, final int width, final int height) {    
     	rotV = 0;
         final Rectangle r = canvas.getParent().getBounds();
         final Point p = canvas.getParent().getLocationOnScreen();
@@ -237,17 +200,10 @@ public class Renderer  implements KeyListener, MouseMotionListener, GLEventListe
         if ((value = keys.get(space)) != null && value == true)
             if (robot != null)
                 robot.mouseMove(centerX, centerY);
-        
-        GL2 gl = drawable.getGL().getGL2();
-
     }
-
     
     @Override
-    public void mouseMoved(final MouseEvent e)
-    {
-        Boolean value = null;
-        //if ((value = keys.get(space)) != null && value == true) {
+    public void mouseMoved(final MouseEvent e) {
         if (pressed) {
             rotY -= (centerX - e.getXOnScreen()) / 1000.0 * mouseSpeed;
             rotV -= (centerY - e.getYOnScreen()) / 1000.0 * mouseSpeed;
@@ -264,41 +220,27 @@ public class Renderer  implements KeyListener, MouseMotionListener, GLEventListe
             if (robot != null)
                 robot.mouseMove(centerX, centerY);
         }
-
     }
 
     @Override
-    public void mouseDragged(final MouseEvent e)
-    {
-
+    public void mouseDragged(final MouseEvent e) {
         mouseMoved(e);
-
     }
 
     @Override
-    public void keyPressed(final KeyEvent e)
-    {
-
+    public void keyPressed(final KeyEvent e) {    
         keys.put(e.getKeyCode(), true);
-
     }
 
     @Override
-    public void keyReleased(final KeyEvent e)
-    {
-
+    public void keyReleased(final KeyEvent e) {    
         keys.put(e.getKeyCode(), false);
-
     }
 
-    @Override public void keyTyped(final KeyEvent e)
-    {
-    }
+    @Override public void keyTyped(final KeyEvent e){}    
 
     @Override public void display(final GLAutoDrawable drawable)
     {
-    	//System.out.println("pos(" + posX + ", " + posY + ", " + posZ + ")");
-    	
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glEnable(GL2.GL_DEPTH_TEST);
 		gl.glClearColor(0f, 0f, 0f, 1f);

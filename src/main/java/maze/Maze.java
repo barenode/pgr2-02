@@ -15,28 +15,23 @@ import com.jogamp.opengl.awt.GLCanvas;
 
 public class Maze {
 	
-	private final Renderer renderer;
-	private final GLCanvas canvas;
+	private final Renderer renderer;	
+	private final TextureLibrary textureLibrary = new TextureLibrary();
+	private final List<Wall> walls = new ArrayList<>(); 
+	private final List<Switch> switches = new ArrayList<>(); 
+	private final Set<KeyPos> visitedSwitches = new HashSet<>();	
+	private final InfoBar infoBar;
 	
-	private TextureLibrary textureLibrary = new TextureLibrary();
-	private List<Wall> walls = new ArrayList<>(); 
-	private List<Switch> switches = new ArrayList<>(); 
-	
-	private InfoBar infoBar;
-	
-	private int totalSwitches = 0;
-	private Set<KeyPos> visitedSwitches = new HashSet<>(); 
+	private int totalSwitches = 0;	
 	
 	public Maze(Renderer renderer, GLCanvas canvas) {
 		super();
 		this.renderer = renderer;
-		this.canvas = canvas;
-		infoBar = new InfoBar(canvas, this);
+		this.infoBar = new InfoBar(canvas, this);
 	}
 	
 	public void init(GL2 gl) {
 		try {			
-			
 			textureLibrary.init(gl);
 			gl.glNewList(2, GL2.GL_COMPILE);
 			
@@ -45,16 +40,11 @@ public class Maze {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(in));		
 			while(reader.ready()) {
 			     String line1 = reader.readLine();			    
-			     String[] line1Parts = line1.split("\\|");
-			     System.out.println(line1Parts.length);
-			     
+			     String[] line1Parts = line1.split("\\|");			     
 			     String line2 = reader.readLine();
-			     String[] line2Parts = line2.split("\\|");
-			     System.out.println(line2Parts.length);
-			     
+			     String[] line2Parts = line2.split("\\|");			     
 			     //line separator
 			     reader.readLine();
-			     //System.out.println(line3);
 			     for (int i=0; i<line1Parts.length; i++) {
 					//ceiling
 					Ceiling ceiling = new Ceiling(i, j, textureLibrary);
@@ -77,34 +67,7 @@ public class Maze {
 			    	 }
 			     }		
 			     j++;
-			}	
-			
-			
-		
-		
-//		char[][] cfg = read();
-//		for (int i=0; i<cfg.length; i++) {
-//			char[] row = cfg[i];
-//			for (int j=0; j<cfg.length; j++) {
-//				//floor
-//				Floor floor = new Floor(i, j, textureLibrary);
-//				floor.init(gl);
-//				//ceiling
-//				Ceiling ceiling = new Ceiling(i, j, textureLibrary);
-//				ceiling.init(gl);
-//				//
-//				char col = row[j];
-//				if ('W'==col) {
-//					Wall wall = new Wall(i, j, textureLibrary);
-//					walls.add(wall);
-//					wall.init(gl);
-//				} else if ('S'==col) {
-//					Switch s = new Switch(i, j, textureLibrary);
-//					switches.add(s);
-//				}
-//			}
-//		}
-		
+			}		
 		} catch (Exception e) {
 			throw new IllegalStateException(e);
 		}
@@ -204,26 +167,5 @@ public class Maze {
 				return false;
 			return true;
 		}	
-	}
-	
-	
-	private char[][] read() {
-		try {
-			char[][] maze = new char[20][20];
-			int row = 0;	
-			InputStream in = Maze.class.getResourceAsStream("/maze.cfg");
-			BufferedReader reader = new BufferedReader(new InputStreamReader(in));		
-			while(reader.ready()) {
-			     String line = reader.readLine();
-			     System.out.println(row + " : " + line + "");
-			     for (int col=0; col<20; col++) {
-			    	 maze[row][col] = line.charAt(col);
-			     }
-			     row++;
-			}			
-			return maze;
-		} catch (Exception e) {
-			throw new IllegalStateException(e);
-		}
 	}
 }

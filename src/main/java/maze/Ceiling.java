@@ -3,8 +3,6 @@ package maze;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.texture.Texture;
 
-import maze.TextureLibrary.WallFace;
-
 public class Ceiling {
 
 	private final int coordX;
