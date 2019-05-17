@@ -112,44 +112,32 @@ public class Renderer  implements KeyListener, MouseMotionListener, GLEventListe
         float newPosZ = posZ;
         
         if ((value = keys.get(forward)) != null && value == true) {
-
         	newPosX -= Math.sin(rotY) * speed;
         	newPosZ += Math.cos(rotY) * speed;
-            //posY += rotV * speed;
         }
 
         if ((value = keys.get(backward)) != null && value == true) {
-
         	newPosX += Math.sin(rotY) * speed;
         	newPosZ -= Math.cos(rotY) * speed;
-            //posY -= rotV * speed;
         }
 
         if ((value = keys.get(leftward)) != null && value == true) {
-
         	newPosX += Math.cos(rotY) * speed;
         	newPosZ += Math.sin(rotY) * speed;
-
         }
 
         if ((value = keys.get(rightward)) != null && value == true) {
-
         	newPosX -= Math.cos(rotY) * speed;
         	newPosZ -= Math.sin(rotY) * speed;
-
         }
-
         
         Vec2D dest = maze.collide(posX, posZ, newPosX, newPosZ);
-//        Vec2D dest = new Vec2D(newPosX, newPosZ);
         
         posX = dest.x;
         posZ = dest.y;
     }
 
-    private void calculateModelview()
-    {
-
+    private void calculateModelview() {  
         final float sinX = (float) Math.sin(rotX);
         final float sinY = (float) Math.sin(rotY);
         final float sinZ = (float) Math.sin(rotZ);
@@ -171,15 +159,12 @@ public class Renderer  implements KeyListener, MouseMotionListener, GLEventListe
         modelview[12] = modelview[0] * posX + modelview[4] * posY + modelview[8] * posZ;
         modelview[13] = modelview[1] * posX + modelview[5] * posY + modelview[9] * posZ;
         modelview[14] = modelview[2] * posX + modelview[6] * posY + modelview[10] * posZ;
-
     }
     
     public void setPosition(float x, float z) {            	
     	posX = x;
         posZ = z;
-    }
-
-    
+    }    
     
     @Override
     public void init(final GLAutoDrawable drawable) {        	
@@ -301,7 +286,7 @@ public class Renderer  implements KeyListener, MouseMotionListener, GLEventListe
 	}
 	
 	public void onMazeCompleted() {
-		 JOptionPane.showConfirmDialog(null, "Mission Completed!", "Info", JOptionPane.DEFAULT_OPTION);		
+		 //JOptionPane.showConfirmDialog(null, "Mission Completed!", "Info", JOptionPane.DEFAULT_OPTION);		
 		 init();
 	}
 }
